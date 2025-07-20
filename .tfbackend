@@ -1,0 +1,4 @@
+resource_group_name   = "rg-hayk-dev"
+storage_account_name  = "devhaykstorageacct"
+container_name        = "tfstate"
+key                   = "env/dev/terraform.tfstate"

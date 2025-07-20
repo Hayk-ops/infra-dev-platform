@@ -1,0 +1,18 @@
+resource "azurerm_storage_account" "devhaykstorageacct" {
+  name                = var.storage_account_config.name
+  resource_group_name = var.resource_group_info.name
+  location            = var.resource_group_info.location
+
+  account_tier                    = var.storage_account_config.account_tier
+  account_kind                    = var.storage_account_config.account_kind
+  account_replication_type        = var.storage_account_config.account_replication_type
+  https_traffic_only_enabled      = var.storage_account_config.https_traffic_only_enabled
+  access_tier                     = var.storage_account_config.access_tier
+  allow_nested_items_to_be_public = var.storage_account_config.allow_nested_items_to_be_public
+}
+
+resource "azurerm_storage_container" "tfstate" {
+  name                  = var.azurerm_storage_container_config.name
+  storage_account_id    = azurerm_storage_account.devhaykstorageacct.id
+  container_access_type = var.azurerm_storage_container_config.container_access_type
+}
