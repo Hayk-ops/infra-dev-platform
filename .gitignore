@@ -1,0 +1,11 @@
+.terraform/
+*.tfstate
+*.tfstate.*
+*.backup
+*.lock.hcl
+*.pem
+*.pfx
+*.plan
+cert_base64.txt
+errored.tfstate
+GUIDE
