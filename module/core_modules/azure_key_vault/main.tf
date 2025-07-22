@@ -27,14 +27,8 @@ resource "azurerm_key_vault_access_policy" "github_oidc" {
   tenant_id    = "5582754b-038d-486a-a2f6-b76933c834fb" # Tenant ID
   object_id    = "05e99ec4-438f-4bdb-b1ca-7ac14d901c9c" # GitHub OIDC App Object ID
 
-  secret_permissions = [
-    "Get",
-    "List"
-  ]
-
-  certificate_permissions = [
-    "Get"
-  ]
+  secret_permissions = ["Get", "List", "Set", "Delete"]
+  certificate_permissions = ["Get", "List", "Import"]
 }
 
 resource "azurerm_key_vault_access_policy" "microsoft_web" {
