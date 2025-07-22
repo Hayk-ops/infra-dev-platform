@@ -151,6 +151,7 @@ variable "azurerm_svc_cert_config" {
 }
 
 variable "web_app_resource_provider_client_id" {
+  default = ""
   type = string
 }
 
