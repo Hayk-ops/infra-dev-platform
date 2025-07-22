@@ -125,11 +125,11 @@ azurerm_svc_cert_config = {
   name = "hayk-dev-cert"
 }
 
-microsoft_web_object_id = "abfa0a7c-a6b6-4736-8310-5855508787cd"
+microsoft_web_object_id    = "abfa0a7c-a6b6-4736-8310-5855508787cd"
 azurerm_svc_cert_secret_id = "https://hayk-dev-key-vault.vault.azure.net/secrets/hayk-dev-cert/d70b7202eb0544bb94f68601868a9158"
 
 secret_permissions_current_user = [
-  "Get",   
+  "Get",
   "List",
   "Set",
   "Delete"

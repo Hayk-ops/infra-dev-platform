@@ -52,19 +52,15 @@ module "dev_rg_vm1" {
   azure_vm_config = merge(
     var.azure_vm_config,
     {
-      admin_ssh_key = merge(
-        var.azure_vm_config.admin_ssh_key,
-        { public_key = file("~/.ssh/id_rsa.pub") }
-      ),
       network_interface_ids = [module.dev_rg_ni.network_interface_info.id]
     }
   )
+
   resource_group_info = {
     name     = var.resource_group_info.name
     location = var.resource_group_info.location
   }
 }
-
 
 # Network Security Groups
 module "nsg" {
