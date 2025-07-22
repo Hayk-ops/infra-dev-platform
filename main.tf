@@ -13,7 +13,7 @@ data "azurerm_key_vault" "main" {
   resource_group_name = "rg-hayk-dev"
 }
 
-data "azurerm_key_vault_secret" "web-app-client-id" {
+data "azurerm_key_vault_secret" "web_app_client_id" {
   name         = "web-app-client-id"
   key_vault_id = data.azurerm_key_vault.main.id
 }
@@ -70,7 +70,7 @@ module "azure_key_vault" {
   microsoft_web_object_id    = var.microsoft_web_object_id
   azurerm_svc_cert_secret_id = var.azurerm_svc_cert_secret_id
 
-  web_app_resource_provider_client_id = data.azurerm_key_vault_secret.web-app-client-id.value
+  web_app_resource_provider_client_id = data.azurerm_key_vault_secret.web_app_client_id.value
 }
 
 
@@ -83,7 +83,7 @@ module "vm_stack" {
   azure_subnet_config   = var.azure_subnet_config
   azure_ni_config       = var.azure_ni_config
   azure_vm_config = merge(
-  var.azure_vm_config,
+    var.azure_vm_config,
     {
       admin_ssh_key = merge(
         try(var.azure_vm_config.admin_ssh_key, {}),
