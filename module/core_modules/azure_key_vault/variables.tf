@@ -45,3 +45,11 @@ variable "secret_permissions_current_user" {
 variable "certificate_permissions_current_user" {
   type = list(string)
 }
+
+variable "tenant_id" {
+  type = string
+}
+
+variable "object_id" {
+  type = string
+}

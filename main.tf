@@ -23,9 +23,15 @@ data "azurerm_key_vault_secret" "ssh_public_key" {
   key_vault_id = data.azurerm_key_vault.main.id
 }
 
+data "azurerm_client_config" "current" {}
+
 provider "azurerm" {
   features {}
   subscription_id = var.azure_sub_id
+}
+
+provider "azuread" {
+  tenant_id = data.azurerm_client_config.current.tenant_id
 }
 
 module "resource_group_core" {
@@ -46,6 +52,9 @@ module "azure_storage" {
 
 module "azure_key_vault" {
   source = "./module/core_modules/azure_key_vault"
+
+  tenant_id = data.azurerm_client_config.current.tenant_id
+  object_id = data.azurerm_client_config.current.object_id
 
   key_vault_dev_core_config = merge(
     var.key_vault_dev_core_config,
