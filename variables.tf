@@ -15,6 +15,9 @@ variable "azure_sub_id" {
   sensitive   = true
 }
 
+
+
+# vm_stack module
 variable "azure_vnet_config" {
   description = "Configuration for Azure virtual network"
   type = object({

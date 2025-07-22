@@ -18,6 +18,11 @@ data "azurerm_key_vault_secret" "web-app-client-id" {
   key_vault_id = data.azurerm_key_vault.main.id
 }
 
+data "azurerm_key_vault_secret" "ssh_public_key" {
+  name         = "ssh-public-key"
+  key_vault_id = data.azurerm_key_vault.main.id
+}
+
 provider "azurerm" {
   features {}
   subscription_id = var.azure_sub_id
@@ -60,9 +65,9 @@ module "azure_key_vault" {
   }
 
   certificate_permissions_current_user = var.certificate_permissions_current_user
-  secret_permissions_current_user = var.secret_permissions_current_user
+  secret_permissions_current_user      = var.secret_permissions_current_user
 
-  microsoft_web_object_id = var.microsoft_web_object_id
+  microsoft_web_object_id    = var.microsoft_web_object_id
   azurerm_svc_cert_secret_id = var.azurerm_svc_cert_secret_id
 
   web_app_resource_provider_client_id = data.azurerm_key_vault_secret.web-app-client-id.value
@@ -77,7 +82,17 @@ module "vm_stack" {
   azure_publicip_config = var.azure_publicip_config
   azure_subnet_config   = var.azure_subnet_config
   azure_ni_config       = var.azure_ni_config
-  azure_vm_config       = var.azure_vm_config
+  azure_vm_config = merge(
+  var.azure_vm_config,
+    {
+      admin_ssh_key = merge(
+        try(var.azure_vm_config.admin_ssh_key, {}),
+        {
+          public_key = data.azurerm_key_vault_secret.ssh_public_key.value
+        }
+      )
+    }
+  )
   azurerm_network_security_rule = [
     for rule in var.azurerm_network_security_rule : merge(
       rule,
