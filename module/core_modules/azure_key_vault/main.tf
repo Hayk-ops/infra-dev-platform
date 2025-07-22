@@ -13,14 +13,14 @@ resource "azurerm_key_vault" "key_vault_dev_core" {
   sku_name = var.key_vault_dev_core_config.sku_name
 }
 
-resource "azurerm_key_vault_access_policy" "current_user" {
-  key_vault_id = azurerm_key_vault.key_vault_dev_core.id
-  tenant_id    = var.tenant_id
-  object_id    = var.object_id
+# resource "azurerm_key_vault_access_policy" "current_user" {
+#   key_vault_id = azurerm_key_vault.key_vault_dev_core.id
+#   tenant_id    = var.tenant_id
+#   object_id    = var.object_id
 
-  secret_permissions      = var.secret_permissions_current_user
-  certificate_permissions = var.certificate_permissions_current_user
-}
+#   secret_permissions      = var.secret_permissions_current_user
+#   certificate_permissions = var.certificate_permissions_current_user
+# }
 
 resource "azurerm_key_vault_access_policy" "github_oidc" {
   key_vault_id            = azurerm_key_vault.key_vault_dev_core.id
