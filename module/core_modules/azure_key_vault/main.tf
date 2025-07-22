@@ -23,11 +23,11 @@ resource "azurerm_key_vault_access_policy" "current_user" {
 }
 
 resource "azurerm_key_vault_access_policy" "github_oidc" {
-  key_vault_id = azurerm_key_vault.key_vault_dev_core.id
-  tenant_id    = "5582754b-038d-486a-a2f6-b76933c834fb" # Tenant ID
-  object_id    = "05e99ec4-438f-4bdb-b1ca-7ac14d901c9c" # GitHub OIDC App Object ID
+  key_vault_id            = azurerm_key_vault.key_vault_dev_core.id
+  tenant_id               = "5582754b-038d-486a-a2f6-b76933c834fb"        # <- your tenant
+  object_id               = "732dbdab-8cf7-430f-a883-b0006e8bfed8"        # <- SP object-ID
 
-  secret_permissions = ["Get", "List", "Set", "Delete"]
+  secret_permissions      = ["Get", "List", "Set", "Delete"]
   certificate_permissions = ["Get", "List", "Import"]
 }
 
