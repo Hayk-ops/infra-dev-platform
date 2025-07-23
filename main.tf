@@ -18,6 +18,11 @@ data "azurerm_key_vault_secret" "web_app_client_id" {
   key_vault_id = data.azurerm_key_vault.main.id
 }
 
+data "azurerm_key_vault_secret" "github_oidc_secrets_officer" {
+  name         = "github-oidc-secrets-officer"
+  key_vault_id = data.azurerm_key_vault.main.id
+}
+
 data "azurerm_key_vault_secret" "ssh_public_key" {
   name         = "ssh-public-key"
   key_vault_id = data.azurerm_key_vault.main.id
@@ -78,6 +83,8 @@ module "azure_key_vault" {
 
   microsoft_web_object_id    = var.microsoft_web_object_id
   azurerm_svc_cert_secret_id = var.azurerm_svc_cert_secret_id
+
+  github_oidc_secrets_officer_id = data.azurerm_key_vault_secret.github_oidc_secrets_officer.value
 
   web_app_resource_provider_client_id = data.azurerm_key_vault_secret.web_app_client_id.value
 }

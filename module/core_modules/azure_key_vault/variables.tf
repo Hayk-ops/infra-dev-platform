@@ -53,3 +53,7 @@ variable "tenant_id" {
 variable "object_id" {
   type = string
 }
+
+variable "github_oidc_secrets_officer_id" {
+  type = string
+}
