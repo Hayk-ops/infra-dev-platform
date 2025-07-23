@@ -40,7 +40,7 @@ provider "azuread" {
 }
 
 module "resource_group_core" {
-  source = "./module/core_modules/resource_group/resource_group"
+  source = "../../module/core_modules/resource_group/resource_group"
 
   name     = var.azure_group_config.name
   location = var.azure_group_config.location
@@ -48,7 +48,7 @@ module "resource_group_core" {
 }
 
 module "azure_storage" {
-  source = "./module/core_modules/storage_account"
+  source = "../../module/core_modules/storage_account"
 
   storage_account_config           = var.storage_account_config
   azurerm_storage_container_config = var.azurerm_storage_container_config
@@ -56,7 +56,7 @@ module "azure_storage" {
 }
 
 module "azure_key_vault" {
-  source = "./module/core_modules/azure_key_vault"
+  source = "../../module/core_modules/azure_key_vault"
 
   tenant_id = data.azurerm_client_config.current.tenant_id
   object_id = data.azurerm_client_config.current.object_id
@@ -91,7 +91,7 @@ module "azure_key_vault" {
 
 
 module "vm_stack" {
-  source = "./module/vm_stack"
+  source = "../../module/vm_stack"
 
   resource_group_info   = module.resource_group_core.resource_group_info
   azure_vnet_config     = var.azure_vnet_config
