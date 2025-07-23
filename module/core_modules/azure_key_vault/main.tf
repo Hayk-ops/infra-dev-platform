@@ -17,9 +17,16 @@ resource "azurerm_key_vault" "key_vault_dev_core" {
 
 resource "azurerm_role_assignment" "ci_secrets_officer" {
   scope                = azurerm_key_vault.key_vault_dev_core.id
-  role_definition_name = "User Access Administrator"   # or Secrets User
+  role_definition_name = "Key Vault Secrets Officer"   # or Secrets User
   principal_id         = "732dbdab-8cf7-430f-a883-b0006e8bfed8"
 }
+
+resource "azurerm_role_assignment" "ci_uaa" {
+  scope                = azurerm_key_vault.key_vault_dev_core.id
+  role_definition_name = "User Access Administrator"  # ← gives permission to assign/delete roles
+  principal_id         = "732dbdab-8cf7-430f-a883-b0006e8bfed8"  # your GitHub Actions SP
+}
+
 
 resource "azurerm_role_assignment" "current_user" {
   scope                = azurerm_key_vault.key_vault_dev_core.id
