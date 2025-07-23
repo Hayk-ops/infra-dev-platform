@@ -32,7 +32,7 @@ jobs:
 
     - name: Terraform Init
       id: init
-      run: terraform init -input=false -backend-config=./infra/dev/.tfbackend
+      run: terraform init -input=false -backend-config=.tfbackend
 
     - name: Terraform Validate
       id: validate
