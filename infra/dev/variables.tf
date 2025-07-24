@@ -170,3 +170,10 @@ variable "secret_permissions_current_user" {
 variable "certificate_permissions_current_user" {
   type = list(string)
 }
+
+variable "ac_registry_info" {
+  type = object({
+    name = string
+    sku  = string
+  })
+}

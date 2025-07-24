@@ -89,6 +89,15 @@ module "azure_key_vault" {
   web_app_resource_provider_client_id = data.azurerm_key_vault_secret.web_app_client_id.value
 }
 
+module "ac_registry" {
+  source = "../../module/core_modules/containers_registry"
+
+  name                  = var.ac_registry_info.name
+  sku                   = var.ac_registry_info.sku
+  resource_group        = module.resource_group_core.resource_group_info
+  github_oidc_object_id = data.azurerm_key_vault_secret.github_oidc_secrets_officer.value
+}
+
 
 module "vm_stack" {
   source = "../../module/vm_stack"

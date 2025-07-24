@@ -27,3 +27,7 @@ output "key_vault_values" {
   value = module.azure_key_vault.key_vault_info
 }
 
+# Azure Container Registry
+output "acr_login_server" {
+  value = module.ac_registry.login_server
+}

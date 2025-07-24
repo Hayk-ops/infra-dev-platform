@@ -141,3 +141,8 @@ certificate_permissions_current_user = [
   "Import",
   "Delete"
 ]
+
+ac_registry_info = {
+  name = "haykdevacr"
+  sku  = "Standard"
+}
