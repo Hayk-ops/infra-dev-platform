@@ -35,6 +35,7 @@ jobs:
       - name: Build and Push Docker image
         uses: docker/build-push-action@v5
         with:
-          context: .
+          context: ./app
+          file: ./app/Dockerfile
           push: true
           tags: haykdevacr.azurecr.io/hayk-devops-app:latest,haykdevacr.azurecr.io/hayk-devops-app:${{ github.sha }}
