@@ -8,6 +8,19 @@ terraform {
   backend "azurerm" {}
 }
 
+provider "azurerm" {
+  features {}
+  subscription_id = var.azure_sub_id
+}
+
+provider "azuread" {
+  tenant_id = data.azurerm_client_config.current.tenant_id
+}
+
+data "azuread_service_principal" "app" {
+  client_id = "606950fc-6535-404c-a928-e031846ea6cd"
+}
+
 data "azurerm_key_vault" "main" {
   name                = "hayk-demo-kv"
   resource_group_name = "rg-hayk-dev"
@@ -30,14 +43,7 @@ data "azurerm_key_vault_secret" "ssh_public_key" {
 
 data "azurerm_client_config" "current" {}
 
-provider "azurerm" {
-  features {}
-  subscription_id = var.azure_sub_id
-}
 
-provider "azuread" {
-  tenant_id = data.azurerm_client_config.current.tenant_id
-}
 
 module "resource_group_core" {
   source = "../../module/core_modules/resource_group/resource_group"
@@ -53,6 +59,8 @@ module "azure_storage" {
   storage_account_config           = var.storage_account_config
   azurerm_storage_container_config = var.azurerm_storage_container_config
   resource_group_info              = module.resource_group_core.resource_group_info
+  subscription_id = var.azure_sub_id
+  principal_id = data.azuread_service_principal.app.object_id
 }
 
 module "azure_key_vault" {

@@ -16,3 +16,9 @@ resource "azurerm_storage_container" "tfstate" {
   storage_account_id    = azurerm_storage_account.devhaykstorageacct.id
   container_access_type = var.azurerm_storage_container_config.container_access_type
 }
+
+resource "azurerm_role_assignment" "blob_data_contributor" {
+  scope                = "/subscriptions/${var.subscription_id}/resourceGroups/${var.resource_group_info.name}/providers/Microsoft.Storage/storageAccounts/${var.storage_account_config.name}"
+  role_definition_name = "Storage Blob Data Contributor"
+  principal_id         = var.principal_id
+}
