@@ -30,7 +30,7 @@ jobs:
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
       - name: Login to ACR
-        run: az acr login --name haykdevacr
+        run: az acr login --name haykdevacregistry
 
       - name: Build and Push Docker image
         uses: docker/build-push-action@v5
@@ -38,4 +38,4 @@ jobs:
           context: ./app
           file: ./app/Dockerfile
           push: true
-          tags: haykdevacr.azurecr.io/hayk-devops-app:latest,haykdevacr.azurecr.io/hayk-devops-app:${{ github.sha }}
+          tags: haykdevacregistry.azurecr.io/hayk-devops-app:latest,haykdevacregistry.azurecr.io/hayk-devops-app:${{ github.sha }}
