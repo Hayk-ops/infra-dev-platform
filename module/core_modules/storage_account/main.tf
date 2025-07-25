@@ -22,3 +22,9 @@ resource "azurerm_role_assignment" "blob_data_contributor" {
   role_definition_name = "Storage Blob Data Contributor"
   principal_id         = var.principal_id
 }
+
+resource "azurerm_role_assignment" "sa_reader" {		
+scope = "/subscriptions/${var.subscription_id}/resourceGroups/${var.resource_group_info.name}"		
+role_definition_name = "Reader"		
+principal_id = var.principal_id		
+}
