@@ -6,7 +6,7 @@ azure_group_config = {
   }
 }
 
-azure_sub_id = "06bfd039-87c6-4548-957a-4416d2fe0e53"
+azure_sub_id = "0e8988ea-cc60-4076-b0bc-463192c17875"
 
 azure_vnet_config = {
   name          = "dev_rg_hayk_network"
@@ -86,7 +86,7 @@ application_security_group_name = "dev_rg_appsg"
 network_security_group_name     = "dev_rg_nsg"
 
 storage_account_config = {
-  name                            = "devhaykstorageacct"
+  name                            = "haykdemotfstate502"
   account_tier                    = "Standard"
   account_kind                    = "StorageV2"
   account_replication_type        = "LRS"
@@ -102,7 +102,7 @@ azurerm_storage_container_config = {
 
 # AZURE VAULT
 key_vault_dev_core_config = {
-  name     = "hayk-dev-key-vault"
+  name     = "hayk-demo-kv"
   sku_name = "standard"
 }
 
@@ -125,8 +125,9 @@ azurerm_svc_cert_config = {
   name = "hayk-dev-cert"
 }
 
-microsoft_web_object_id    = "abfa0a7c-a6b6-4736-8310-5855508787cd"
-azurerm_svc_cert_secret_id = "https://hayk-dev-key-vault.vault.azure.net/secrets/hayk-dev-cert/d70b7202eb0544bb94f68601868a9158"
+# review
+microsoft_web_object_id    = "0e8988ea-cc60-4076-b0bc-463192c17875"
+azurerm_svc_cert_secret_id = "https://hayk-demo-kv.vault.azure.net/secrets/hayk-dev-cert/06e572e7c42f4496958942d8d9c2c08a"
 
 secret_permissions_current_user = [
   "Get",
@@ -143,6 +144,6 @@ certificate_permissions_current_user = [
 ]
 
 ac_registry_info = {
-  name = "haykdevacr"
+  name = "haykdevacregistry"
   sku  = "Standard"
 }

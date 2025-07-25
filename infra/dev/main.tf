@@ -9,7 +9,7 @@ terraform {
 }
 
 data "azurerm_key_vault" "main" {
-  name                = "hayk-dev-key-vault"
+  name                = "hayk-demo-kv"
   resource_group_name = "rg-hayk-dev"
 }
 

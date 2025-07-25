@@ -28,6 +28,12 @@ resource "azurerm_role_assignment" "current_user" {
   principal_id         = var.object_id
 }
 
+# resource "azurerm_role_assignment" "app_service_certificate_access" {
+#   scope                = azurerm_key_vault.key_vault_dev_core.id
+#   role_definition_name = "Key Vault Secrets User"
+#   principal_id         = "abfa0a7c-a6b6-4736-8310-5855508787cd"
+# }
+
 resource "azurerm_app_service_certificate" "azurerm_svc_cert" {
   name                = var.azurerm_svc_cert_config.name
   resource_group_name = var.azurerm_svc_cert_config.resource_group_name

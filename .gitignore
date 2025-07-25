@@ -9,3 +9,4 @@
 cert_base64.txt
 errored.tfstate
 GUIDE
+export_secrets.txt
