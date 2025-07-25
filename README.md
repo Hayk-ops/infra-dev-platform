@@ -1,4 +1,4 @@
-📄 README.md (copy this into your repo root)
+📄 README.md (copy this into your repo root))
 markdown
 Copy
 Edit
