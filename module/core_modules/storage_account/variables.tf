@@ -23,3 +23,11 @@ variable "resource_group_info" {
     location = string
   })
 }
+
+variable "subscription_id" {
+  type = string
+}
+
+variable "principal_id" {
+  type = string
+}
