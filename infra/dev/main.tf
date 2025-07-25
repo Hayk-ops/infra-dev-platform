@@ -59,8 +59,8 @@ module "azure_storage" {
   storage_account_config           = var.storage_account_config
   azurerm_storage_container_config = var.azurerm_storage_container_config
   resource_group_info              = module.resource_group_core.resource_group_info
-  subscription_id = var.azure_sub_id
-  principal_id = data.azuread_service_principal.app.object_id
+  subscription_id                  = var.azure_sub_id
+  principal_id                     = data.azuread_service_principal.app.object_id
 }
 
 module "azure_key_vault" {
