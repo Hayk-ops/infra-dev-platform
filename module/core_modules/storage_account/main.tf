@@ -28,3 +28,9 @@ scope = "/subscriptions/${var.subscription_id}/resourceGroups/${var.resource_gro
 role_definition_name = "Reader"		
 principal_id = var.principal_id		
 }
+
+resource "azurerm_role_assignment" "sa_key_operator" {
+  scope                = "/subscriptions/${var.subscription_id}/resourceGroups/${var.resource_group_info.name}/providers/Microsoft.Storage/storageAccounts/${var.storage_account_config.name}"
+  role_definition_name = "Storage Account Key Operator Service Role"
+  principal_id         = var.principal_id
+}
