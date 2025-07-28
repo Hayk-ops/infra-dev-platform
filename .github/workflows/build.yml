@@ -32,10 +32,32 @@ jobs:
       - name: Login to ACR
         run: az acr login --name haykdevacregistry
 
+      - name: Read and bump version
+        id: version
+        run: |
+          cd ./app
+          version=$(cat VERSION)
+          IFS='.' read -r major minor patch <<< "$version"
+          new_patch=$((patch + 1))
+          new_version="$major.$minor.$new_patch"
+          echo "new_version=$new_version" >> $GITHUB_OUTPUT
+          echo $new_version > VERSION
+
+      - name: Commit updated VERSION file
+        run: |
+          cd ./app
+          git config user.name "github-actions"
+          git config user.email "ci@github.com"
+          git add VERSION
+          git commit -m "CI: bump version to ${{ steps.version.outputs.new_version }}"
+          git push
+
       - name: Build and Push Docker image
         uses: docker/build-push-action@v5
         with:
           context: ./app
           file: ./app/Dockerfile
           push: true
-          tags: haykdevacregistry.azurecr.io/hayk-devops-app:latest,haykdevacregistry.azurecr.io/hayk-devops-app:${{ github.sha }}
+          tags: |
+            haykdevacregistry.azurecr.io/hayk-devops-app:latest
+            haykdevacregistry.azurecr.io/hayk-devops-app:${{ steps.version.outputs.new_version }}
