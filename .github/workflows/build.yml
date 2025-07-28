@@ -35,7 +35,7 @@ jobs:
       - name: Read and bump version
         id: version
         run: |
-          cd ../app/
+          cd ./app
           version=$(cat VERSION)
           IFS='.' read -r major minor patch <<< "$version"
           new_patch=$((patch + 1))
@@ -45,7 +45,7 @@ jobs:
 
       - name: Commit updated VERSION file
         run: |
-          cd ../app/
+          cd ./app
           git config user.name "github-actions"
           git config user.email "ci@github.com"
           git add VERSION
@@ -55,8 +55,8 @@ jobs:
       - name: Build and Push Docker image
         uses: docker/build-push-action@v5
         with:
-          context: ../app/
-          file: ../app/Dockerfile
+          context: ./app 
+          file: ./app/Dockerfile
           push: true
           tags: |
             haykdevacregistry.azurecr.io/hayk-devops-app:latest
