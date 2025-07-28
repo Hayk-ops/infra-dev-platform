@@ -43,7 +43,16 @@ data "azurerm_key_vault_secret" "ssh_public_key" {
 
 data "azurerm_client_config" "current" {}
 
+locals {
+  github_oidc_object_id = trimspace(
+    nonsensitive(data.azurerm_key_vault_secret.github_oidc_secrets_officer.value)
+  )
 
+  kv_reader_ids = {
+    user           = data.azurerm_client_config.current.object_id,
+    github_oidc_sp = local.github_oidc_object_id
+  }
+}
 
 module "resource_group_core" {
   source = "../../module/core_modules/resource_group/resource_group"
@@ -68,6 +77,8 @@ module "azure_key_vault" {
 
   tenant_id = data.azurerm_client_config.current.tenant_id
   object_id = data.azurerm_client_config.current.object_id
+
+  kv_reader_ids = local.kv_reader_ids
 
   key_vault_dev_core_config = merge(
     var.key_vault_dev_core_config,
@@ -95,6 +106,17 @@ module "azure_key_vault" {
   github_oidc_secrets_officer_id = data.azurerm_key_vault_secret.github_oidc_secrets_officer.value
 
   web_app_resource_provider_client_id = data.azurerm_key_vault_secret.web_app_client_id.value
+}
+
+module "hayk_aks_dev" {
+  source = "../../module/core_modules/azure_aks"
+
+  resource_group_info = module.resource_group_core.resource_group_info
+  cluster_name        = var.cluster_name
+  dns_prefix          = var.dns_prefix
+  default_node_pool   = var.default_node_pool
+  identity            = var.identity
+  tags                = var.tags
 }
 
 module "ac_registry" {

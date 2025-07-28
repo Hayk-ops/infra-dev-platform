@@ -28,6 +28,19 @@ resource "azurerm_role_assignment" "current_user" {
   principal_id         = var.object_id
 }
 
+# resource "azurerm_role_assignment" "kv_readers" {
+#   for_each             = var.kv_reader_ids
+#   scope                = azurerm_key_vault.key_vault_dev_core.id
+#   role_definition_name = "Key Vault Secrets User"
+#   principal_id         = each.value
+
+#   # 🔑 FIX: correct usage of principal_type
+#   principal_type = each.key == "user" ? "User" : "ServicePrincipal"
+
+#   skip_service_principal_aad_check = true
+
+# }
+
 # resource "azurerm_role_assignment" "app_service_certificate_access" {
 #   scope                = azurerm_key_vault.key_vault_dev_core.id
 #   role_definition_name = "Key Vault Secrets User"

@@ -147,3 +147,24 @@ ac_registry_info = {
   name = "haykdevacregistry"
   sku  = "Standard"
 }
+
+# AKS dev
+cluster_name = "hayk_dev_aks"
+
+dns_prefix = "hayk-dev-aks-dnsprf"
+
+default_node_pool = {
+  name       = "default"
+  node_count = 1
+  vm_size    = "Standard_B2s"
+  type       = "VirtualMachineScaleSets"
+  # zones      = ["1", "2", "3"]
+}
+
+identity = {
+  type = "SystemAssigned"
+}
+
+tags = {
+  environment = "Dev"
+}
