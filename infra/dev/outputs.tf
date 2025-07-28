@@ -31,3 +31,30 @@ output "key_vault_values" {
 output "acr_login_server" {
   value = module.ac_registry.login_server
 }
+
+# AKS cluster 1
+output "kube_config_raw" {
+  value     = module.hayk_aks_dev.kube_config_raw
+  sensitive = true
+}
+
+output "client_certificate" {
+  value     = module.hayk_aks_dev.client_certificate
+  sensitive = true
+}
+
+output "cluster_name" {
+  value = module.hayk_aks_dev.cluster_name
+}
+
+output "kubernetes_version" {
+  value = module.hayk_aks_dev.kubernetes_version
+}
+
+output "node_resource_group" {
+  value = module.hayk_aks_dev.node_resource_group
+}
+
+output "identity_principal_id" {
+  value = module.hayk_aks_dev.identity_principal_id
+}

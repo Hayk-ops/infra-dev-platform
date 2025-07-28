@@ -57,3 +57,8 @@ variable "object_id" {
 variable "github_oidc_secrets_officer_id" {
   type = string
 }
+
+variable "kv_reader_ids" {
+  type        = map(string)
+  description = "Map of principal type to object ID"
+}

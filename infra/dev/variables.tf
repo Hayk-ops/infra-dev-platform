@@ -177,3 +177,35 @@ variable "ac_registry_info" {
     sku  = string
   })
 }
+
+
+# AKS dev
+variable "cluster_name" {
+  type = string
+}
+
+variable "dns_prefix" {
+  type = string
+}
+
+variable "default_node_pool" {
+  type = object({
+    name       = string
+    node_count = number
+    vm_size    = string
+    type       = string
+    # zones      = list(string)
+  })
+}
+
+variable "identity" {
+  type = object({
+    type = string
+  })
+}
+
+variable "tags" {
+  type = object({
+    environment = string
+  })
+}
