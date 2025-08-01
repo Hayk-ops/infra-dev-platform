@@ -31,7 +31,12 @@ resource "azurerm_network_security_group" "dev_rg_net_sec_group" {
   resource_group_name = var.network_security_group.resource_group_name
 }
 
-resource "azurerm_network_interface_security_group_association" "dev_rg_nic_nsg_assoc" {
-  network_interface_id      = var.network_interface_security_group_association.network_interface_id
-  network_security_group_id = var.network_interface_security_group_association.network_security_group_id
+# resource "azurerm_network_interface_security_group_association" "dev_rg_nic_nsg_assoc" {
+#   network_interface_id      = var.network_interface_security_group_association.network_interface_id
+#   network_security_group_id = var.network_interface_security_group_association.network_security_group_id
+# }
+
+resource "azurerm_network_interface_security_group_association" "nsg_assoc" {
+  network_interface_id      = var.nic_info.id
+  network_security_group_id = azurerm_network_security_group.dev_rg_net_sec_group.id
 }

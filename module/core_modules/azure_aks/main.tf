@@ -11,7 +11,7 @@ resource "azurerm_kubernetes_cluster" "hayk_dev_aks" {
     type       = var.default_node_pool.type
     # zones      = var.default_node_pool.zones
     upgrade_settings {
-      max_surge       = "1"
+      max_surge = "1"
     }
   }
 

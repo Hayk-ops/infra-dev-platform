@@ -108,16 +108,16 @@ module "azure_key_vault" {
   web_app_resource_provider_client_id = data.azurerm_key_vault_secret.web_app_client_id.value
 }
 
-module "hayk_aks_dev" {
-  source = "../../module/core_modules/azure_aks"
+# module "hayk_aks_dev" {
+#   source = "../../module/core_modules/azure_aks"
 
-  resource_group_info = module.resource_group_core.resource_group_info
-  cluster_name        = var.cluster_name
-  dns_prefix          = var.dns_prefix
-  default_node_pool   = var.default_node_pool
-  identity            = var.identity
-  tags                = var.tags
-}
+#   resource_group_info = module.resource_group_core.resource_group_info
+#   cluster_name        = var.cluster_name
+#   dns_prefix          = var.dns_prefix
+#   default_node_pool   = var.default_node_pool
+#   identity            = var.identity
+#   tags                = var.tags
+# }
 
 module "ac_registry" {
   source = "../../module/core_modules/containers_registry"
@@ -129,14 +129,55 @@ module "ac_registry" {
 }
 
 
-module "vm_stack" {
-  source = "../../module/vm_stack"
+# module "vm_stack" {
+#   source = "../../module/vm_stack"
 
-  resource_group_info   = module.resource_group_core.resource_group_info
+#   resource_group_info   = module.resource_group_core.resource_group_info
+#   azure_vnet_config     = var.azure_vnet_config
+#   azure_publicip_config = var.azure_publicip_config
+#   azure_subnet_config   = var.azure_subnet_config
+#   azure_ni_config       = var.azure_ni_config
+#   azure_vm_config = merge(
+#     var.azure_vm_config,
+#     {
+#       admin_ssh_key = merge(
+#         try(var.azure_vm_config.admin_ssh_key, {}),
+#         {
+#           public_key = data.azurerm_key_vault_secret.ssh_public_key.value
+#         }
+#       )
+#     }
+#   )
+#   azurerm_network_security_rule = [
+#     for rule in var.azurerm_network_security_rule : merge(
+#       rule,
+#       {
+#         resource_group_name         = module.resource_group_core.resource_group_info.name,
+#         network_security_group_name = var.network_security_group_name
+#       }
+#     )
+#   ]
+#   application_security_group_name = var.application_security_group_name
+#   network_security_group_name     = var.network_security_group_name
+# }
+
+
+module "k8s_cluster" {
+  source = "../../module/core_modules/k8s_cluster"
+
+
+  vm_specs = var.vm_specs
+  resource_group_info = {
+    name     = module.resource_group_core.resource_group_info.name
+    location = module.resource_group_core.resource_group_info.location
+    tags     = module.resource_group_core.resource_group_info.tags
+  }
   azure_vnet_config     = var.azure_vnet_config
   azure_publicip_config = var.azure_publicip_config
   azure_subnet_config   = var.azure_subnet_config
   azure_ni_config       = var.azure_ni_config
+  public_key_value      = data.azurerm_key_vault_secret.ssh_public_key.value
+  vm_count              = var.vm_count
   azure_vm_config = merge(
     var.azure_vm_config,
     {
