@@ -1,11 +1,4 @@
-variable "resource_group_info" {
-  type = object({
-    name     = string
-    location = string
-    tags     = map(string)
-  })
-}
-
+# vm_stack module
 variable "azure_vnet_config" {
   description = "Configuration for Azure virtual network"
   type = object({
@@ -20,6 +13,7 @@ variable "azure_publicip_config" {
     name              = string
     allocation_method = string
   })
+
 }
 
 variable "azure_subnet_config" {
@@ -66,6 +60,7 @@ variable "azure_vm_config" {
   })
 }
 
+
 variable "azurerm_network_security_rule" {
   description = "Azure network security rules"
   type = list(object({
@@ -91,8 +86,21 @@ variable "network_security_group_name" {
   type        = string
 }
 
+variable "resource_group_info" {
+  description = "The object getting core aatributes of the resource group"
+  type = object({
+    name     = string
+    location = string
+    tags     = map(string)
+  })
+}
+
+variable "public_key_value" {
+  type = string
+}
+
 variable "vm_count" {
-  description = "The count of the vm to iterate in"
+  description = "Number of VMs in the HA cluster"
   type        = number
 }
 

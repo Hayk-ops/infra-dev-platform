@@ -33,10 +33,9 @@ variable "network_security_group" {
   })
 }
 
-variable "network_interface_security_group_association" {
-  description = "Network Interface Security Group Association"
+variable "nic_info" {
+  description = "Info for NIC to associate"
   type = object({
-    network_interface_id      = string
-    network_security_group_id = string
+    id = string
   })
 }

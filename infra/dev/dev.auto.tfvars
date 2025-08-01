@@ -168,3 +168,14 @@ identity = {
 tags = {
   environment = "Dev"
 }
+
+
+vm_specs = {
+  "master-1"     = { role = "master", size = "Standard_B1ms" }
+  "master-2"     = { role = "master", size = "Standard_B1ms" }
+  "master-3"     = { role = "master", size = "Standard_B1ms" }
+  "worker-1"     = { role = "worker", size = "Standard_B2s" }
+  "worker-2"     = { role = "worker", size = "Standard_B2s" }
+  "worker-3"     = { role = "worker", size = "Standard_B2s" }
+  "loadbalancer" = { role = "lb", size = "Standard_B1s" }
+}
