@@ -1,0 +1,17 @@
+- name: Update apt cache again
+  ansible.builtin.apt:
+    update_cache: yes
+
+- name: Ensure haproxy packages are installed
+  ansible.builtin.apt:
+    name: haproxy
+    state: present
+
+- name: Deploy HAProxy config for Kubernetes API load balancing
+  ansible.builtin.template:
+    src:  "{{ temp_src }}"
+    dest: "{{ temp_dest }}"
+    owner: root
+    group: root
+    mode: '0644'
+  notify: Restart HAProxy

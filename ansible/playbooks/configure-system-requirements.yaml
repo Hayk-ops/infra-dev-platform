@@ -1,0 +1,5 @@
+- name: Configuration system requirements for K8s
+  hosts: masters:workers
+  become: true
+  roles:
+    - k8s_node_system_prep

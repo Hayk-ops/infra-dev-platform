@@ -1,0 +1,8 @@
+join_command: >-
+  kubeadm join 20.124.13.157:6443
+  --token wjr2do.2uqfmsrn149zamag
+  --discovery-token-ca-cert-hash sha256:9e2c2db67902039cec473176e1035c4d52dd8aa0c7716eb771d652c44d570569
+
+k8s_components:
+  - containerd
+  - kubelet

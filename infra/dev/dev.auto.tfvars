@@ -79,6 +79,17 @@ azurerm_network_security_rule = [
     destination_port_range     = "80"
     source_address_prefix      = "*"
     destination_address_prefix = "*"
+  },
+    {
+    name                       = "allow-k8s-api"
+    priority                   = 102
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "6443"
+    source_address_prefix      = "*"
+    destination_address_prefix = "*"
   }
 ]
 
@@ -171,11 +182,11 @@ tags = {
 
 
 vm_specs = {
-  "master-1"     = { role = "master", size = "Standard_B1ms" }
-  "master-2"     = { role = "master", size = "Standard_B1ms" }
-  "master-3"     = { role = "master", size = "Standard_B1ms" }
-  "worker-1"     = { role = "worker", size = "Standard_B2s" }
-  "worker-2"     = { role = "worker", size = "Standard_B2s" }
-  "worker-3"     = { role = "worker", size = "Standard_B2s" }
+  "master-1"     = { role = "master", size = "Standard_B2s" }
+  "master-2"     = { role = "master", size = "Standard_B2s" }
+  "master-3"     = { role = "master", size = "Standard_B2s" }
+  "worker-1"     = { role = "worker", size = "Standard_B1ms" }
+  "worker-2"     = { role = "worker", size = "Standard_B1ms" }
+  "worker-3"     = { role = "worker", size = "Standard_B1ms" }
   "loadbalancer" = { role = "lb", size = "Standard_B1s" }
 }

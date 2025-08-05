@@ -1,0 +1,33 @@
+all:
+  vars:
+    ansible_user: ansible
+    ansible_ssh_private_key_file: /home/hayk/.ssh/ansible_id_rsa
+
+  children:
+    kubernetes:
+      children:
+        masters:
+          hosts:
+            master1:
+              ansible_host: 20.39.54.171
+            master2:
+              ansible_host: 20.169.255.231
+            master3:
+              ansible_host: 20.185.55.172
+
+        workers:
+          hosts:
+            worker1:
+              ansible_host: 172.190.166.132
+            worker2:
+              ansible_host: 172.178.21.164
+            worker3:
+              ansible_host: 4.246.166.228
+
+    loadbalancers:
+      hosts:
+        lb1:
+          ansible_host: 20.124.13.157
+          master1_ip: 10.0.2.5
+          master2_ip: 10.0.2.6
+          master3_ip: 10.0.2.7

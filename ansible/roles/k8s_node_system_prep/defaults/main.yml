@@ -1,0 +1,19 @@
+fstab_path: /etc/fstab
+swap_regexp: '^([^#].*[\s\t]swap[\s\t].*)$'
+swap_replace: '# \1'
+
+load_modules:
+  - overlay
+  - br_netfilter
+
+k8s_sysctl_settings:
+  - "net.bridge.bridge-nf-call-iptables = 1"
+  - "net.bridge.bridge-nf-call-ip6tables = 1"
+  - "net.ipv4.ip_forward = 1"
+
+docker_gpg_dir: /etc/apt/keyrings
+docker_gpg_url: https://download.docker.com/linux/ubuntu/gpg
+docker_gpg_file: "{{ docker_gpg_dir }}/docker.gpg"
+docker_repo_file: /etc/apt/sources.list.d/docker.list
+
+containerd_config_path: /etc/containerd/config.toml

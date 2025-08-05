@@ -1,0 +1,13 @@
+- name: Download Kubernetes signing key
+  shell: |
+    curl -fsSL "{{ k8s_repo_url }}"Release.key | gpg --dearmor -o "{{ k8s_repo_gpg_file }}"
+  args:
+    creates: "{{ k8s_repo_gpg_file }}"
+
+- name: Add Kubernetes apt repository
+  shell: |
+    echo 'deb [signed-by="{{ k8s_repo_gpg_file }}"] "{{ k8s_repo_url }}" /' | tee "{{ k8s_repo_file }}"
+
+- name: Update apt cache
+  apt:
+    update_cache: yes

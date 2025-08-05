@@ -1,0 +1,5 @@
+- name: K8s masters loadbalancer setup
+  hosts: loadbalancers:lb1
+  become: true
+  roles:
+    - haproxy_lb_k8s

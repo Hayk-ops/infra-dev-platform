@@ -1,0 +1,17 @@
+- name: Install kubelet, kubeadm, kubectl
+  apt:
+    name: "{{ main_components }}"
+    state: present
+    update_cache: yes
+
+- name: Hold Kubernetes packages
+  dpkg_selections:
+    name: "{{ item }}"
+    selection: hold
+  loop: "{{ main_components }}"
+
+- name: Enable and start kubelet service
+  systemd_service:
+    name: kubelet
+    enabled: yes
+    state: started

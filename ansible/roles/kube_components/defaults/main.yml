@@ -1,0 +1,4 @@
+main_components:
+  - kubelet
+  - kubeadm
+  - kubectl 

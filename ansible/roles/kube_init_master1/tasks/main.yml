@@ -1,0 +1,35 @@
+- name: Restart containerd and kubelet
+  ansible.builtin.systemd:
+    name: "{{ item }}"
+    state: restarted
+    enabled: true
+  loop: "{{ k8s_services }}"
+
+- name: Run kubeadm init
+  shell: |
+    kubeadm init \
+      --control-plane-endpoint "{{ control_plane_endpoint }}" \
+      --upload-certs \
+      --pod-network-cidr "{{ pod_network_cidr }}" \
+      --v=5
+  register: init_output
+  args:
+    creates: /etc/kubernetes/admin.conf
+
+- name: Save kubeadm init output (includes join commands)
+  copy:
+    content: "{{ init_output.stdout }}"
+    dest: /root/kubeadm-init-output.txt
+
+- name: Generate Kubernetes control-plane join command
+  shell: |
+    kubeadm token create --print-join-command --certificate-key $(kubeadm init phase upload-certs --upload-certs | tail -n 1)
+  register: control_plane_join_cmd
+  run_once: true
+  delegate_to: "{{ inventory_hostname }}"
+
+- name: Set join_control_plane_command fact
+  set_fact:
+    join_control_plane_command: "{{ control_plane_join_cmd.stdout }}"
+  run_once: true
+  delegate_to: "{{ inventory_hostname }}"

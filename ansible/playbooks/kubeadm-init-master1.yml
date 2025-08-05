@@ -1,0 +1,5 @@
+- name: Initialize Kubernetes on master-1
+  hosts: master1
+  become: true
+  roles:
+    - kube_init_master1

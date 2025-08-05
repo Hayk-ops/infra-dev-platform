@@ -1,0 +1,5 @@
+- name: Join other masters to the cluster
+  hosts: masters
+  become: true
+  roles:
+    - join_masters
