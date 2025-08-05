@@ -1,0 +1,5 @@
+- name: Join worker nodes to the cluster
+  hosts: workers
+  become: true
+  roles:
+    - join_workers

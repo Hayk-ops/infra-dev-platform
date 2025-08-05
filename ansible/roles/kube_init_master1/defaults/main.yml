@@ -1,0 +1,8 @@
+k8s_services:
+  - containerd
+  - kubelet
+
+control_plane_endpoint: 20.124.13.157:6443
+pod_network_cidr: 192.168.0.0/16
+containerd_config_path: /etc/containerd/config.toml
+inventory_hostname: master1

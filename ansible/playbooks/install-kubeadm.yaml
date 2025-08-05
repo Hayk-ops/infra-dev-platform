@@ -1,0 +1,7 @@
+- name: Install Kubeadm for control plane and worker nodes
+  hosts: masters:workers
+  become: true
+  roles: 
+    - system_prerequisites
+    - kubernetes_apt_repo
+    - kube_components

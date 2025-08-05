@@ -1,0 +1,101 @@
+- name: Disable swap
+  ansible.builtin.command: swapoff -a
+  become: true
+
+- name: Comment out all swap entries in "{{ fstab_path }}"
+  ansible.builtin.replace:
+    path: "{{ fstab_path }}"
+    regexp: "{{ swap_regexp }}"
+    replace: "{{ swap_replace }}"
+  become: true
+
+- name: Set kernel modules to load on boot
+  ansible.builtin.shell: |
+    echo -e "overlay\nbr_netfilter" > /etc/modules-load.d/k8s.conf
+  become: true
+
+- name: Load kernel modules
+  ansible.builtin.shell: "modprobe {{ item }}"
+  loop: "{{ load_modules }}"
+  become: true
+
+- name: Ensure sysctl config file exists
+  ansible.builtin.file:
+    path: /etc/sysctl.d/k8s.conf
+    state: touch
+  become: true
+
+- name: Set sysctl parameters for Kubernetes networking
+  ansible.builtin.lineinfile:
+    path: /etc/sysctl.d/k8s.conf
+    line: "{{ item }}"
+    create: yes
+    state: present
+  loop: "{{ k8s_sysctl_settings }}"
+  become: true
+
+- name: Apply sysctl changes
+  ansible.builtin.shell: sysctl --system
+  become: true
+
+- name: Update apt package for installation necessary tools
+  ansible.builtin.apt:
+    update_cache: yes
+  become: true
+
+- name: Add Docker official GPG key
+  ansible.builtin.shell: |
+    install -m 0755 -d "{{ docker_gpg_dir }}"
+    curl -fsSL "{{ docker_gpg_url }}" | gpg --dearmor -o "{{ docker_gpg_file }}"
+    chmod a+r "{{ docker_gpg_file }}"
+  args:
+    creates: "{{ docker_gpg_file }}"
+  become: true
+
+- name: Add Docker apt repository
+  ansible.builtin.shell: |
+    echo \
+      "deb [arch=$(dpkg --print-architecture) signed-by="{{ docker_gpg_file }}"] https://download.docker.com/linux/ubuntu \
+      $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | tee "{{ docker_repo_file }}" > /dev/null
+  args:
+    creates: "{{ docker_repo_file }}"
+  become: true
+
+- name: Update apt cache again
+  ansible.builtin.apt:
+    update_cache: yes
+  become: true
+
+- name: Ensure containerd packages are installed
+  ansible.builtin.apt:
+    name: containerd.io
+    state: present
+  become: true
+
+- name: Enable and start the Containerd service
+  ansible.builtin.systemd_service:
+    name: containerd
+    enabled: yes
+    state: started 
+  become: true 
+
+- name: Ensure generate default configuration
+  ansible.builtin.shell: |
+    containerd config default > "{{ containerd_config_path }}"
+  args:
+    creates: "{{ containerd_config_path }}"
+  become: true
+
+- name: Ensure containerd systemd group is set to true
+  lineinfile:
+    path: "{{ containerd_config_path }}"
+    regexp: '^SystemdCgroup = false'
+    line: 'SystemdCgroup = true'
+  become: true
+
+- name: Restart containerd after config generation
+  ansible.builtin.systemd_service:
+    name: containerd
+    state: restarted
+  become: true
+

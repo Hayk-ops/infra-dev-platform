@@ -1,0 +1,21 @@
+- name: Restart containerd
+  systemd:
+    name: containerd
+    state: restarted
+    enabled: yes
+  when: inventory_hostname != "master1"
+
+- name: Restart kubelet
+  systemd:
+    name: kubelet
+    state: restarted
+    enabled: yes
+  when: inventory_hostname != "master1"
+
+- name: Join control plane node to cluster
+  shell: "{{ hostvars['master1']['join_control_plane_command'] }}"
+  args:
+    creates: "{{ kubelet_conf_path }}"
+  when:
+    - inventory_hostname != "master1"
+    - hostvars['master1']['join_control_plane_command'] is defined

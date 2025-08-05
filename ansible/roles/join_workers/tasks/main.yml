@@ -1,0 +1,12 @@
+- name: Restart containerd and kubelet
+  systemd:
+    name: "{{ item }}"
+    state: restarted
+    enabled: true
+  loop: "{{ k8s_components }}"
+
+- name: Join the worker node to the cluster
+  shell: "{{ join_command }}"
+  args:
+    creates: /etc/kubernetes/kubelet.conf
+  when: join_command is defined
