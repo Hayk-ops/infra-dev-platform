@@ -1,6 +1,6 @@
 # Ansible Project – Kubernetes HA Cluster Setup
 
-this project automates the provisioning of a High-Availability Kubernetes cluster using Ansible.
+This  project automates the provisioning of a High-Availability Kubernetes cluster using Ansible.
 
 ## Structure
 - `inventory/` – Hosts and group variables
