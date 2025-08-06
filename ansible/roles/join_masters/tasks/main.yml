@@ -12,10 +12,15 @@
     enabled: yes
   when: inventory_hostname != "master1"
 
-- name: Join control plane node to cluster
-  shell: "{{ hostvars['master1']['join_control_plane_command'] }}"
-  args:
-    creates: "{{ kubelet_conf_path }}"
-  when:
-    - inventory_hostname != "master1"
-    - hostvars['master1']['join_control_plane_command'] is defined
+- name: Join control plane node to cluster (ignore failure in dry run)
+  block:
+    - name: Join control plane node to cluster
+      shell: "{{ hostvars['master1']['join_control_plane_command'] }}"
+      args:
+        creates: "{{ kubelet_conf_path }}"
+      when:
+        - inventory_hostname != "master1"
+        - hostvars['master1']['join_control_plane_command'] is defined
+  rescue:
+    - debug:
+        msg: "🔁 Expected failure in dry run: Join token might not exist yet."

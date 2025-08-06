@@ -4,4 +4,4 @@
 - import_playbook: ./sub_playbooks/k8s-masters-loadbalancer-setup.yaml
 - import_playbook: ./sub_playbooks/kubeadm-init-master1.yml
 - import_playbook: ./sub_playbooks/kubeadm-join-masters.yml
-- import_playbook: ./sub_playbooks/kubeadm-join-workers.yml
+- import_playbook: ./sub_playbooks/kubeadm-join-workers.yml 
