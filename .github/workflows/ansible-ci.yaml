@@ -11,6 +11,10 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
 
+    defaults:
+      run:
+        working-directory: ansible
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -34,10 +38,10 @@ jobs:
         shell: bash
 
       - name: Check Syntax of Playbook
-        run: ansible-playbook HA_k8s_cluster_init/HA_k8s_cluster_init.yaml --syntax-check
+        run: ansible-playbook playbooks/HA_k8s_cluster_init/HA_k8s_cluster_init.yaml --syntax-check
 
       - name: Check Logical Correctness (Dry Run)
-        run: ansible-playbook HA_k8s_cluster_init/HA_k8s_cluster_init.yaml --check
+        run: ansible-playbook playbooks/HA_k8s_cluster_init/HA_k8s_cluster_init.yaml --check
 
       # - name: Run Ansible Playbook
       #   run: ansible-playbook HA_k8s_cluster_init/HA_k8s_cluster_init.yaml
