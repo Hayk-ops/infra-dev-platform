@@ -1,3 +1,3 @@
-temp_src: /mnt/c/Users/Galaxy Book Pro/Desktop/Devops-Project/ansible/roles/haproxy_lb_k8s/templates/haproxy.j2
+temp_src:  /ansible/roles/haproxy_lb_k8s/templates/haproxy.j2
 temp_dest: /etc/haproxy/haproxy.cfg
 
