@@ -78,9 +78,6 @@ jobs:
 
                 echo "$new_version" > "$ver_file"
                 echo "${service}_version=$new_version" >> "$GITHUB_OUTPUT"
-
-                echo "::notice::Bumping $service: $old -> $new"
-                echo "$new" > "$ver_file"
             done
 
 
