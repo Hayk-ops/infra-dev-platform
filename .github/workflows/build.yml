@@ -64,6 +64,7 @@ jobs:
       - name: Commit updated VERSION file
         run: |
           set -euo pipefail
+          [ -z "${SERVICES:-}" ] && { echo "::notice::No changed services; skip commit"; exit 0; }
           git config user.name "github-actions"
           git config user.email "ci@github.com"
           
