@@ -63,7 +63,7 @@ jobs:
           # first path segment is the service; ignore VERSION files
           SERVICES=$(echo "$CHANGED" \
             | grep -vE '^[^/]+/VERSION$' \
-            | awk -F/ '{print $1}' \
+            | awk -F/ '{print $2}' \
             | sort -u | tr '\n' ' ')
 
           echo "::notice::Detected services: ${SERVICES:-<none>}"
