@@ -53,6 +53,7 @@ jobs:
             # We're in ./app → paths look like "<service>/..."
             # exclude VERSION files and collapse to unique service names
             CHANGED=$(echo "$CHANGED" | grep -vE '^[^/]+/VERSION$' || true)
+            echo "$CHANGED"
             SERVICES=$(echo "$CHANGED" | awk -F/ 'NF>=1 {print $1}' | sort -u)
 
             echo "::group::Changed files"; echo "$CHANGED"; echo "::endgroup::"
