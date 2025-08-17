@@ -39,27 +39,36 @@ jobs:
 
       - name: Get changed files
         run: |
-            set -euo pipefail
-            BEFORE="${{ github.event.before }}"
-            if [ "$BEFORE" = "0000000000000000000000000000000000000000" ]; then
-            # first push on branch
-            CHANGED=$(git diff-tree --no-commit-id --name-only -r "${{ github.sha }}" -- .)
-            else
-            # ensure BEFORE exists in shallow clones
-            git rev-parse "$BEFORE" >/dev/null 2>&1 || git fetch --no-tags origin "$BEFORE"
-            CHANGED=$(git diff --name-only "$BEFORE" "${{ github.sha }}" -- .)
-            fi
+          set -euo pipefail
+          BEFORE="${{ github.event.before }}"
 
-            # We're in ./app → paths look like "<service>/..."
-            # exclude VERSION files and collapse to unique service names
-            CHANGED=$(echo "$CHANGED" | grep -vE '^[^/]+/VERSION$' || true)
-            echo "$CHANGED"
-            IFS='/' read -r -a paths <<< "$CHANGED"
-            SERVICES=$(echo "$CHANGED" | grep '^app/' | sed -E 's#^app/##' | grep -vE '^[^/]+/VERSION$' | awk -F/ '{print $1}' | sort -u | tr '\n' ' ')
+          # choose a base commit we actually have
+          if git cat-file -e "$BEFORE^{commit}" 2>/dev/null; then
+            BASE="$BEFORE"
+          elif git rev-parse HEAD^ >/dev/null 2>&1; then
+            BASE="$(git rev-parse HEAD^)"
+          else
+            BASE=""
+          fi
 
-            echo "::group::Changed files"; echo "$CHANGED"; echo "::endgroup::"
-            echo "::notice::Detected services: ${SERVICES:-<none>}"
-            echo "SERVICES=$SERVICES" >> $GITHUB_ENV
+          # diff only inside ./app
+          if [ -n "$BASE" ]; then
+            CHANGED=$(git diff --name-only "$BASE" "$GITHUB_SHA" -- . || true)
+          else
+            CHANGED=$(git diff-tree --no-commit-id --name-only -r "$GITHUB_SHA" -- . || true)
+          fi
+
+          echo "::group::Changed files"; echo "$CHANGED"; echo "::endgroup::"
+
+          # first path segment is the service; ignore VERSION files
+          SERVICES=$(echo "$CHANGED" \
+            | grep -vE '^[^/]+/VERSION$' \
+            | awk -F/ '{print $1}' \
+            | sort -u | tr '\n' ' ')
+
+          echo "::notice::Detected services: ${SERVICES:-<none>}"
+          echo "SERVICES=$SERVICES" >> "$GITHUB_ENV"
+
 
 
       - name: Read and bump version
