@@ -6,8 +6,6 @@ on:
       - main
     paths:
       - 'app/**'
-    paths-ignore:
-      - 'app/**/VERSION'
 
 permissions:
   id-token: write
@@ -39,10 +37,10 @@ jobs:
         run: |
             BEFORE="${{ github.event.before }}"
             [ "$BEFORE" = "0000000000000000000000000000000000000000" ] && BEFORE="${{ github.sha }}~1"
-            CHANGED=$(git diff --name-only "$BEFORE" "${{ github.sha }}" | grep '^app/' || true)
+            # exclude VERSION files here
+            CHANGED=$(git diff --name-only "$BEFORE" "${{ github.sha }}" | grep '^app/' | grep -vE '^app/[^/]+/VERSION$' || true)
             SERVICES=$(echo "$CHANGED" | awk -F/ 'NF>=2 {print $2}' | sort -u)
             echo "SERVICES=$SERVICES" >> $GITHUB_ENV
-
 
       - name: Read and bump version
         id: version
