@@ -55,7 +55,7 @@ jobs:
             CHANGED=$(echo "$CHANGED" | grep -vE '^[^/]+/VERSION$' || true)
             echo "$CHANGED"
             IFS='/' read -r -a paths <<< "$CHANGED"
-            SERVICES="${paths[1]}"
+            SERVICES=$(echo "$CHANGED" | grep '^app/' | sed -E 's#^app/##' | grep -vE '^[^/]+/VERSION$' | awk -F/ '{print $1}' | sort -u | tr '\n' ' ')
 
             echo "::group::Changed files"; echo "$CHANGED"; echo "::endgroup::"
             echo "::notice::Detected services: ${SERVICES:-<none>}"
