@@ -78,7 +78,7 @@ jobs:
             [ -z "${SERVICES:-}" ] && { echo "::notice::No changed services; skipping"; exit 0; }
 
             for service in ${{ env.SERVICES }}; do
-                ver_file="$app/service/VERSION"
+                ver_file="app/$service/VERSION"
                 [ -f "$ver_file" ] || { echo "::error file not found: $ver_file"; exit 1; }
 
                 version=$(tr -d '\r\n' < "$ver_file")
