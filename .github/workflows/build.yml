@@ -32,21 +32,32 @@ jobs:
       - name: Login to ACR
         run: az acr login --name haykdevacregistry
 
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+            fetch-depth: 0
+
       - name: Get changed files
-        working-directory: .
         run: |
+            set -euo pipefail
             BEFORE="${{ github.event.before }}"
-            [ "$BEFORE" = "0000000000000000000000000000000000000000" ] && BEFORE="${{ github.sha }}~1"
-            # exclude VERSION files here
-            CHANGED=$(git diff --name-only "$BEFORE" "${{ github.sha }}" | grep '^app/' | grep -vE '^app/[^/]+/VERSION$' || true)
-            SERVICES=$(echo "$CHANGED" | awk -F/ 'NF>=2 {print $2}' | sort -u)
-            echo "SERVICES=$SERVICES" >> $GITHUB_ENV
+            if [ "$BEFORE" = "0000000000000000000000000000000000000000" ]; then
+            # first push on branch
+            CHANGED=$(git diff-tree --no-commit-id --name-only -r "${{ github.sha }}" -- .)
+            else
+            # ensure BEFORE exists in shallow clones
+            git rev-parse "$BEFORE" >/dev/null 2>&1 || git fetch --no-tags origin "$BEFORE"
+            CHANGED=$(git diff --name-only "$BEFORE" "${{ github.sha }}" -- .)
+            fi
 
+            # We're in ./app → paths look like "<service>/..."
+            # exclude VERSION files and collapse to unique service names
+            CHANGED=$(echo "$CHANGED" | grep -vE '^[^/]+/VERSION$' || true)
+            SERVICES=$(echo "$CHANGED" | awk -F/ 'NF>=1 {print $1}' | sort -u)
 
-            echo "::group::Debug: Changed file list"
-            echo "$CHANGED"
-            echo "::endgroup::"
+            echo "::group::Changed files"; echo "$CHANGED"; echo "::endgroup::"
             echo "::notice::Detected services: ${SERVICES:-<none>}"
+            echo "SERVICES=$SERVICES" >> $GITHUB_ENV
 
 
       - name: Read and bump version
