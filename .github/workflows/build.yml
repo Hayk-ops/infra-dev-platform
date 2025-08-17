@@ -6,6 +6,8 @@ on:
       - main
     paths:
       - 'app/**'
+    paths-ignore:
+      - 'app/**/VERSION'
 
 permissions:
   id-token: write
@@ -32,30 +34,56 @@ jobs:
       - name: Login to ACR
         run: az acr login --name haykdevacregistry
 
+      - name: Get changed files
+        working-directory: .
+        run: |
+            BEFORE="${{ github.event.before }}"
+            [ "$BEFORE" = "0000000000000000000000000000000000000000" ] && BEFORE="${{ github.sha }}~1"
+            CHANGED=$(git diff --name-only "$BEFORE" "${{ github.sha }}" | grep '^app/' || true)
+            SERVICES=$(echo "$CHANGED" | awk -F/ 'NF>=2 {print $2}' | sort -u)
+            echo "SERVICES=$SERVICES" >> $GITHUB_ENV
+
+
       - name: Read and bump version
         id: version
         run: |
-          version=$(cat VERSION)
-          IFS='.' read -r major minor patch <<< "$version"
-          new_patch=$((patch + 1))
-          new_version="$major.$minor.$new_patch"
-          echo "new_version=$new_version" >> $GITHUB_OUTPUT
-          echo $new_version > VERSION
+            set -euo pipefail
+            [ -z "${SERVICES:-}" ] && { echo "::notice::No changed services; skipping"; exit 0; }
+
+            for service in ${{ env.SERVICES }}; do
+                ver_file="$service/VERSION"
+                [ -f "$ver_file" ] || { echo "::error file not found: $ver_file"; exit 1; }
+
+                version=$(tr -d '\r\n' < "$ver_file")
+                IFS='.' read -r major minor patch <<< "$version"
+                new_version="$major.$minor.$((patch + 1))"
+
+                echo "$new_version" > "$ver_file"
+                echo "${service}_version=$new_version" >> "$GITHUB_OUTPUT"
+            done
+
 
       - name: Commit updated VERSION file
         run: |
+          set -euo pipefail
           git config user.name "github-actions"
           git config user.email "ci@github.com"
-          git add VERSION
-          git commit -m "CI: bump version to ${{ steps.version.outputs.new_version }}"
-          git push
+          
+          for service in ${{ env.SERVICES }}; do
+            git add "$service/VERSION"
+          done
+            git commit -m "CI: bump service versions [skip ci]" || echo "no changes"
+            git push
 
-      - name: Build and Push Docker image
-        uses: docker/build-push-action@v5
-        with:
-          context: ./app 
-          file: ./app/Dockerfile
-          push: true
-          tags: |
-            haykdevacregistry.azurecr.io/hayk-devops-app:latest
-            haykdevacregistry.azurecr.io/hayk-devops-app:${{ steps.version.outputs.new_version }}
+
+      - name: Build & push changed services
+        run: |
+            set -euo pipefail
+            [ -z "${SERVICES:-}" ] && { echo "No changed services"; exit 0; }
+            REG=haykdevacregistry.azurecr.io
+            for service in $SERVICES; do
+                ver=$(tr -d '\r\n' < "$service/VERSION")
+                docker build -t $REG/$service:latest -t $REG/$service:$ver $service
+                docker push $REG/$service:latest
+                docker push $REG/$service:$ver
+            done
