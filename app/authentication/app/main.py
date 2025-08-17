@@ -30,5 +30,5 @@ def login(body: LoginReq):
 @app.get("/me")
 def me(authorization: str | None = Header(default=None)):
     if not authorization:
-        raise HTTPException(status_code=401, detail="missing Authorization")
+        raise HTTPException(status_code=401, detail="missing Authorizations")
     return {"user": authorization.replace("Bearer ", ""), "roles": ["user"]}
