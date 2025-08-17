@@ -42,6 +42,13 @@ jobs:
             SERVICES=$(echo "$CHANGED" | awk -F/ 'NF>=2 {print $2}' | sort -u)
             echo "SERVICES=$SERVICES" >> $GITHUB_ENV
 
+
+            echo "::group::Debug: Changed file list"
+            echo "$CHANGED"
+            echo "::endgroup::"
+            echo "::notice::Detected services: ${SERVICES:-<none>}"
+
+
       - name: Read and bump version
         id: version
         run: |
@@ -58,7 +65,12 @@ jobs:
 
                 echo "$new_version" > "$ver_file"
                 echo "${service}_version=$new_version" >> "$GITHUB_OUTPUT"
+
+                echo "::notice::Bumping $service: $old -> $new"
+                echo "$new" > "$ver_file"
             done
+
+
 
 
       - name: Commit updated VERSION file
@@ -80,9 +92,24 @@ jobs:
             set -euo pipefail
             [ -z "${SERVICES:-}" ] && { echo "No changed services"; exit 0; }
             REG=haykdevacregistry.azurecr.io
+
+
+
+            echo "::group::Docker/ACR info"
+            docker version
+            docker info | sed -n '1,40p'
+            az account show --output table || true
+            az acr show -n haykdevacregistry --output table || true
+            echo "::endgroup::"
+
             for service in $SERVICES; do
                 ver=$(tr -d '\r\n' < "$service/VERSION")
+                echo "::notice::Building $service as $REG/$service:latest and :$ver"
+
                 docker build -t $REG/$service:latest -t $REG/$service:$ver $service
                 docker push $REG/$service:latest
                 docker push $REG/$service:$ver
+
+                az acr repository show-tags --name haykdevacregistry --repository $service -o table || true
+
             done
