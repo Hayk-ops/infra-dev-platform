@@ -30,7 +30,7 @@ jobs:
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
       - name: Login to ACR
-        run: az acr login --name haykdevacregistry
+        run: az acr login --name haikdevacregistry
 
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -110,7 +110,7 @@ jobs:
         run: |
             set -euo pipefail
             [ -z "${SERVICES:-}" ] && { echo "No changed services"; exit 0; }
-            REG=haykdevacregistry.azurecr.io
+            REG=haikdevacregistry.azurecr.io
 
 
 
@@ -118,7 +118,7 @@ jobs:
             docker version
             docker info | sed -n '1,40p'
             az account show --output table || true
-            az acr show -n haykdevacregistry --output table || true
+            az acr show -n haikdevacregistry --output table || true
             echo "::endgroup::"
 
             for service in $SERVICES; do
@@ -129,6 +129,6 @@ jobs:
                 docker push $REG/$service:latest
                 docker push $REG/$service:$ver
 
-                az acr repository show-tags --name haykdevacregistry --repository $service -o table || true
+                az acr repository show-tags --name haikdevacregistry --repository $service -o table || true
 
             done
