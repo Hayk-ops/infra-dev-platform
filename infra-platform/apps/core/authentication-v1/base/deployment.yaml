@@ -26,7 +26,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: authentication
-          image: haykdevacregistry.azurecr.io/authentication:0.0.2
+          image: haikdevacregistry.azurecr.io/authentication:0.0.2
           imagePullPolicy: IfNotPresent
           ports:
             - name: http
