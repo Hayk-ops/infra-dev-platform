@@ -3,9 +3,8 @@ kind: Kustomization
 resources:
   - deployment.yaml
   - service.yaml
+  - sa-default-patch.yaml
 commonLabels:
   app.kubernetes.io/part-of: core
   app.kubernetes.io/name: authentication
   app.kubernetes.io/component: api
-patches:
-  - path: sa-default-patch.yaml
