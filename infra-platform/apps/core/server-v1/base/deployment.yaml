@@ -21,9 +21,8 @@ spec:
         app.kubernetes.io/version: "1.33.3" 
     spec:
       securityContext:
-        runAsNonRoot: true
-        seccompProfile:
-          type: RuntimeDefault
+        allowPrivilegeEscalation: false
+        readOnlyRootFilesystem: true
       containers:
         - name: server
           image: haikdevacregistry.azurecr.io/server:0.0.2
