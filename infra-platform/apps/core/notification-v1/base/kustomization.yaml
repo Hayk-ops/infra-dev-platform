@@ -6,5 +6,5 @@ resources:
   - sa-default-patch.yaml
 commonLabels:
   app.kubernetes.io/part-of: core
-  app.kubernetes.io/name: notification
+  app.kubernetes.io/name: notifications
   app.kubernetes.io/component: api

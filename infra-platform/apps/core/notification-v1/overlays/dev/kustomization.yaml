@@ -4,7 +4,7 @@ namespace: dev
 resources:
   - ../../base
 images:
-  - name: haikdevacregistry.azurecr.io/notification
+  - name: haikdevacregistry.azurecr.io/notifications
     newTag: "0.0.2"    
 patches:
   - path: patch.yaml
