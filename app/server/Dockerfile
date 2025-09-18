@@ -18,10 +18,3 @@ COPY --from=builder /app /app
 USER appuser
 
 CMD ["node", "server.js"]
-
-
-
-
-
-
-
