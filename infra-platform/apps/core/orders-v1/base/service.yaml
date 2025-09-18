@@ -1,13 +1,13 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: authentication
+  name: orders
   labels:
-    app.kubernetes.io/name: authentication
+    app.kubernetes.io/name: orders
 spec:
   type: ClusterIP
   selector:
-    app.kubernetes.io/name: authentication
+    app.kubernetes.io/name: orders
   ports:
     - name: http
       port: 80

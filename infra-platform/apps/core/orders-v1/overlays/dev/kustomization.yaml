@@ -4,7 +4,7 @@ namespace: dev
 resources:
   - ../../base
 images:
-  - name: haikdevacregistry.azurecr.io/authentication
+  - name: haikdevacregistry.azurecr.io/orders
     newTag: "0.0.2"    
 patches:
   - path: patch.yaml
