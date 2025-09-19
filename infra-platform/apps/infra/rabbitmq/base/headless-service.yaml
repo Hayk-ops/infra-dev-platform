@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: rabbitmq-headless
+  labels:
+    app: rabbitmq
+spec:
+  clusterIP: None
+  ports:
+    - port: 4369
+      targetPort: 4369
+      name: epmd
+    - port: 25672
+      targetPort: 25672
+      name: dist
+  selector:
+    app: rabbitmq
