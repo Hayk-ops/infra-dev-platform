@@ -21,7 +21,7 @@ spec:
             - name: RABBITMQ_ERLANG_COOKIE
               valueFrom:
                 secretKeyRef:
-                  name: erlang-cookie
+                  name: rabbitmq-erlang-cookie
                   key: cookie
           ports:
             - name: amqp
