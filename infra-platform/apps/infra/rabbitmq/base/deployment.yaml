@@ -4,7 +4,7 @@ metadata:
   name: rabbitmq
 spec:
   serviceName: rabbitmq-headless   
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: rabbitmq
@@ -17,6 +17,13 @@ spec:
       containers:
         - name: rabbitmq
           image: rabbitmq:3.13-management
+          resources:
+            requests:
+              cpu: "500m"
+              memory: "512Mi"
+            limits:
+              cpu: "1"
+              memory: "1Gi"
           env:
             - name: RABBITMQ_ERLANG_COOKIE
               valueFrom:
